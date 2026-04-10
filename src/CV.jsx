@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import profilePhoto from "./assets/profile.png";
 import {
   Education,
   Experience,
@@ -15,21 +16,11 @@ import {
   IconLinkedIn,
   IconLocation,
   IconPhone,
-  IconUser,
 } from "./icons";
 
 export default function CV() {
   const cvRef = useRef(null);
-  const [photo, setPhoto] = useState(null);
   const [exporting, setExporting] = useState(false);
-
-  const handlePhotoUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => setPhoto(ev.target.result);
-    reader.readAsDataURL(file);
-  };
 
   const handleExportPDF = async () => {
     setExporting(true);
@@ -79,30 +70,13 @@ export default function CV() {
           {/* Photo + Name block */}
           <div className="px-7 pt-9 pb-7 border-b border-white/10">
             <div className="mb-5 flex justify-center">
-              <label className="cursor-pointer block">
-                <div className="w-24 h-24 rounded-full border-[2.5px] border-white/40 overflow-hidden bg-white/10 flex items-center justify-center hover:opacity-90 transition-opacity">
-                  {photo ? (
-                    <img
-                      src={photo}
-                      alt="Profile"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center gap-1 text-center">
-                      <IconUser />
-                      <span className="text-[9px] text-white/50 leading-tight px-2">
-                        Click to upload
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handlePhotoUpload}
+              <div className="w-24 h-24 rounded-full border-[2.5px] border-white/40 overflow-hidden">
+                <img
+                  src={profilePhoto}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
                 />
-              </label>
+              </div>
             </div>
 
             <h1 className="text-[17px] font-bold text-white leading-tight mb-1 text-center">
@@ -124,7 +98,12 @@ export default function CV() {
                 {cvData.phone}
               </SidebarContactRow>
               <SidebarContactRow icon={<IconEmail />}>
-                {cvData.email}
+                <a
+                  href={`mailto:${cvData.email}`}
+                  className="hover:text-blue-200 transition-colors"
+                >
+                  {cvData.email}
+                </a>
               </SidebarContactRow>
               <SidebarContactRow icon={<IconLinkedIn />}>
                 <a

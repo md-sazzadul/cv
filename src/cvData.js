@@ -4,8 +4,11 @@ export const cvData = {
   location: "Dortmund, Germany",
   phone: "+49 1590 4697130",
   email: "md.sazzadul.islam15@gmail.com",
-  linkedin: { label: "LinkedIn", url: "https://linkedin.com/in/your-profile" },
-  github: { label: "GitHub", url: "https://github.com/your-username" },
+  linkedin: {
+    label: "LinkedIn",
+    url: "https://www.linkedin.com/in/md-sazzadul-islam15/",
+  },
+  github: { label: "GitHub", url: "https://github.com/md-sazzadul" },
 
   summary: [
     "Frontend Engineer with 3+ years of experience building scalable, high-performance web applications using React, TypeScript, and modern frontend architecture.",
