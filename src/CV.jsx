@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import CVHeader from "./components/CVHeader";
 import {
   Education,
   Experience,
@@ -9,7 +8,15 @@ import {
   Summary,
 } from "./components/CVSections";
 import { cvData } from "./cvData";
-import { IconDownload } from "./icons";
+import {
+  IconDownload,
+  IconEmail,
+  IconGithub,
+  IconLinkedIn,
+  IconLocation,
+  IconPhone,
+  IconUser,
+} from "./icons";
 
 export default function CV() {
   const cvRef = useRef(null);
@@ -50,7 +57,7 @@ export default function CV() {
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       {/* Toolbar */}
-      <div className="max-w-215 mx-auto mb-4 flex justify-end">
+      <div className="max-w-225 mx-auto mb-4 flex justify-end">
         <button
           onClick={handleExportPDF}
           disabled={exporting}
@@ -64,25 +71,104 @@ export default function CV() {
       {/* CV Document */}
       <div
         ref={cvRef}
-        className="max-w-215 mx-auto bg-white shadow-lg"
-        style={{ fontFamily: "'Georgia', serif" }}
+        className="max-w-225 mx-auto bg-white shadow-lg flex"
+        style={{ fontFamily: "'Georgia', serif", minHeight: "1122px" }}
       >
-        <CVHeader
-          data={cvData}
-          photo={photo}
-          onPhotoUpload={handlePhotoUpload}
-        />
+        {/* ── LEFT SIDEBAR ── */}
+        <div className="w-67 shrink-0 bg-[#1a3a5c] text-white flex flex-col">
+          {/* Photo + Name block */}
+          <div className="px-7 pt-9 pb-7 border-b border-white/10">
+            <div className="mb-5 flex justify-center">
+              <label className="cursor-pointer block">
+                <div className="w-24 h-24 rounded-full border-[2.5px] border-white/40 overflow-hidden bg-white/10 flex items-center justify-center hover:opacity-90 transition-opacity">
+                  {photo ? (
+                    <img
+                      src={photo}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center gap-1 text-center">
+                      <IconUser />
+                      <span className="text-[9px] text-white/50 leading-tight px-2">
+                        Click to upload
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handlePhotoUpload}
+                />
+              </label>
+            </div>
 
-        <div className="px-10 pb-10">
+            <h1 className="text-[17px] font-bold text-white leading-tight mb-1 text-center">
+              {cvData.name}
+            </h1>
+            <p className="text-[10.5px] text-blue-200 text-center leading-snug">
+              {cvData.title}
+            </p>
+          </div>
+
+          {/* Contact */}
+          <div className="px-7 py-6 border-b border-white/10">
+            <SidebarSectionTitle>Contact</SidebarSectionTitle>
+            <div className="space-y-2.5">
+              <SidebarContactRow icon={<IconLocation />}>
+                {cvData.location}
+              </SidebarContactRow>
+              <SidebarContactRow icon={<IconPhone />}>
+                {cvData.phone}
+              </SidebarContactRow>
+              <SidebarContactRow icon={<IconEmail />}>
+                {cvData.email}
+              </SidebarContactRow>
+              <SidebarContactRow icon={<IconLinkedIn />}>
+                <a
+                  href={cvData.linkedin.url}
+                  className="hover:text-blue-200 transition-colors"
+                >
+                  {cvData.linkedin.label}
+                </a>
+              </SidebarContactRow>
+              <SidebarContactRow icon={<IconGithub />}>
+                <a
+                  href={cvData.github.url}
+                  className="hover:text-blue-200 transition-colors"
+                >
+                  {cvData.github.label}
+                </a>
+              </SidebarContactRow>
+            </div>
+          </div>
+
+          {/* Skills */}
+          <div className="px-7 py-6 border-b border-white/10">
+            <SidebarSectionTitle>Technical Skills</SidebarSectionTitle>
+            <Skills groups={cvData.skills} sidebar />
+          </div>
+
+          {/* Education */}
+          <div className="px-7 py-6 border-b border-white/10">
+            <SidebarSectionTitle>Education</SidebarSectionTitle>
+            <Education data={cvData.education} sidebar />
+          </div>
+
+          {/* Languages */}
+          <div className="px-7 py-6">
+            <SidebarSectionTitle>Languages</SidebarSectionTitle>
+            <Languages items={cvData.languages} sidebar />
+          </div>
+        </div>
+
+        {/* ── RIGHT MAIN COLUMN ── */}
+        <div className="flex-1 px-9 py-9">
           <Summary items={cvData.summary} />
-          <Skills groups={cvData.skills} />
           <Experience items={cvData.experience} />
           <Projects items={cvData.projects} />
-
-          <div className="mt-7 grid grid-cols-2 gap-8">
-            <Education data={cvData.education} />
-            <Languages items={cvData.languages} />
-          </div>
         </div>
       </div>
 
@@ -93,3 +179,21 @@ export default function CV() {
     </div>
   );
 }
+
+/* ── Sidebar primitives ── */
+
+const SidebarSectionTitle = ({ children }) => (
+  <div className="mb-3">
+    <h2 className="text-[9.5px] font-bold tracking-[2px] uppercase text-blue-200 mb-1.5">
+      {children}
+    </h2>
+    <div className="h-px bg-white/20" />
+  </div>
+);
+
+const SidebarContactRow = ({ icon, children }) => (
+  <div className="flex items-start gap-2.5 text-[11px] text-white/80">
+    <span className="text-blue-300 mt-0.5 shrink-0">{icon}</span>
+    <span className="leading-snug break-all">{children}</span>
+  </div>
+);
