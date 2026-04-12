@@ -63,8 +63,8 @@ export const cvData = {
   projects: [
     {
       name: "SaaS Analytics Dashboard",
-      github: "#",
-      live: "#",
+      github: "https://github.com/md-sazzadul/saas-dashboard",
+      live: "https://saas-dashboard-sazzad15.netlify.app/",
       bullets: [
         "Built a production-grade dashboard with React, TypeScript, and modern architecture",
         "Implemented server-state management using TanStack Query (caching, retries, stale data handling)",
@@ -76,8 +76,8 @@ export const cvData = {
     },
     {
       name: "Kanban Task Management App",
-      github: "#",
-      live: "#",
+      github: "https://github.com/md-sazzadul/kanban-app",
+      live: "https://kanban-app-sazzad15.netlify.app/",
       bullets: [
         "Developed a full-featured task management system with drag-and-drop functionality",
         "Built real-time task filtering, priority management, and search highlighting",

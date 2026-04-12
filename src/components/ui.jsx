@@ -36,10 +36,20 @@ export const BulletList = ({ items, boldPhrases }) => (
     {items.map((item, i) => (
       <li
         key={i}
-        className="flex gap-2.5 items-start text-[12.5px] text-gray-600 leading-relaxed"
+        style={{ display: "flex", gap: "8px", alignItems: "flex-start" }}
       >
-        <span className="mt-1.75 w-1.25 h-1.25 rounded-full bg-[#1a56a0] shrink-0" />
-        <BoldText text={item} boldPhrases={boldPhrases} />
+        <svg
+          viewBox="0 0 6 6"
+          style={{ width: 6, height: 6, flexShrink: 0, marginTop: "5px" }}
+          fill="#1a56a0"
+        >
+          <circle cx="3" cy="3" r="3" />
+        </svg>
+        <span
+          style={{ fontSize: "12.5px", color: "#4b5563", lineHeight: "1.625" }}
+        >
+          <BoldText text={item} boldPhrases={boldPhrases} />
+        </span>
       </li>
     ))}
   </ul>
