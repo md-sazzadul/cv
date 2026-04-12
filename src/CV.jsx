@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import profilePhoto from "./assets/profile.png";
 import {
   Education,
@@ -20,50 +20,69 @@ import {
 
 export default function CV() {
   const cvRef = useRef(null);
-  const [exporting, setExporting] = useState(false);
 
-  const handleExportPDF = async () => {
-    setExporting(true);
-    try {
-      const html2pdf = (
-        await import("https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js")
-      ).default;
-      await html2pdf()
-        .set({
-          margin: 0,
-          filename: "Md_Sazzadul_Islam_CV.pdf",
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-        })
-        .from(cvRef.current)
-        .save();
-    } catch (err) {
-      console.error("PDF export failed:", err);
-      alert("PDF export failed. Please try again.");
-    }
-    setExporting(false);
+  // Inject Inter font + print styles once
+  useEffect(() => {
+    if (document.getElementById("cv-print-styles")) return;
+
+    const style = document.createElement("style");
+    style.id = "cv-print-styles";
+    style.textContent = `
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+      @media print {
+        @page {
+          size: A4 portrait;
+          margin: 0;
+        }
+
+        html, body {
+          margin: 0 !important;
+          padding: 0 !important;
+          background: white !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        .print\\:hidden {
+          display: none !important;
+        }
+
+        #cv-print-root {
+          box-shadow: none !important;
+          width: 210mm !important;
+          min-height: 297mm !important;
+          margin: 0 !important;
+          max-width: none !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }, []);
+
+  const handleExportPDF = () => {
+    window.print();
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4">
+    <div className="min-h-screen bg-gray-100 py-8 px-4 print:bg-white print:p-0 print:m-0">
       {/* Toolbar */}
-      <div className="max-w-225 mx-auto mb-4 flex justify-end">
+      <div className="max-w-225 mx-auto mb-4 flex justify-end print:hidden">
         <button
           onClick={handleExportPDF}
-          disabled={exporting}
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#1a56a0] text-white text-sm font-medium rounded-lg hover:bg-[#154a8a] transition-colors disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+          className="flex items-center gap-2 px-5 py-2.5 bg-[#1a56a0] text-white text-sm font-medium rounded-lg hover:bg-[#154a8a] transition-colors shadow-sm"
         >
           <IconDownload />
-          {exporting ? "Generating PDF…" : "Export as PDF"}
+          Export as PDF
         </button>
       </div>
 
       {/* CV Document */}
       <div
         ref={cvRef}
+        id="cv-print-root"
         className="max-w-225 mx-auto bg-white shadow-lg flex"
-        style={{ fontFamily: "'Georgia', serif", minHeight: "1122px" }}
+        style={{ fontFamily: "'Inter', sans-serif", minHeight: "1122px" }}
       >
         {/* ── LEFT SIDEBAR ── */}
         <div className="w-67 shrink-0 bg-[#1a3a5c] text-white flex flex-col">
@@ -155,7 +174,7 @@ export default function CV() {
         </div>
       </div>
 
-      <p className="text-center text-xs text-gray-400 mt-4">
+      <p className="text-center text-xs text-gray-400 mt-4 print:hidden">
         Click "Export as PDF" to download
       </p>
     </div>
