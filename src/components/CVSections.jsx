@@ -1,14 +1,54 @@
 import { IconExternalLink, IconGithub } from "../icons";
 import { BulletList, SectionTitle } from "./ui";
 
+/* ── helpers ── */
+
+/**
+ * Wraps specified phrases in <strong> within a text string.
+ * @param {string} text
+ * @param {string[]} boldPhrases
+ */
+function BoldText({ text, boldPhrases }) {
+  if (!boldPhrases || boldPhrases.length === 0) return <>{text}</>;
+
+  // Build a regex that matches any of the phrases
+  const escaped = boldPhrases.map((p) =>
+    p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+  );
+  const regex = new RegExp(`(${escaped.join("|")})`, "g");
+  const parts = text.split(regex);
+
+  return (
+    <>
+      {parts.map((part, i) =>
+        boldPhrases.includes(part) ? (
+          <strong key={i} className="font-semibold text-gray-800">
+            {part}
+          </strong>
+        ) : (
+          <span key={i}>{part}</span>
+        ),
+      )}
+    </>
+  );
+}
+
 /* ── Summary ── */
+
+const SUMMARY_BOLD = [
+  "React, TypeScript, and modern frontend architecture.",
+  "component-driven development, state management, and data-heavy UI systems,",
+  "clean architecture, performance optimization, and user-centric design.",
+  "robust, scalable, and maintainable applications.",
+];
+
 export const Summary = ({ items }) => (
   <div className="mb-7">
     <SectionTitle>Professional Summary</SectionTitle>
     <div className="space-y-2">
       {items.map((p, i) => (
         <p key={i} className="text-[12.5px] text-gray-600 leading-relaxed">
-          {p}
+          <BoldText text={p} boldPhrases={SUMMARY_BOLD} />
         </p>
       ))}
     </div>
@@ -72,6 +112,17 @@ export const Skills = ({ groups, sidebar = false }) => {
 };
 
 /* ── Experience ── */
+
+const EXPERIENCE_BOLD = [
+  "scalable frontend modules",
+  "interactive geospatial visualizations",
+  "REST API data flows",
+  "state management solutions (Redux)",
+  "component libraries",
+  "multi-language (i18n) support",
+  "Agile team environment",
+];
+
 export const Experience = ({ items }) => (
   <div className="mb-7">
     <SectionTitle>Professional Experience</SectionTitle>
@@ -94,7 +145,7 @@ export const Experience = ({ items }) => (
                 {exp.date}
               </span>
             </div>
-            <BulletList items={exp.bullets} />
+            <BulletList items={exp.bullets} boldPhrases={EXPERIENCE_BOLD} />
           </div>
         </div>
       ))}
@@ -139,6 +190,8 @@ export const Projects = ({ items }) => (
 const ProjectLink = ({ href, icon, label }) => (
   <a
     href={href}
+    target="_blank"
+    rel="noopener noreferrer"
     className="flex items-center gap-1.5 text-[11px] text-blue-700 border border-blue-200 bg-blue-50 px-2.5 py-1 rounded-full hover:bg-blue-100 transition-colors"
   >
     {icon} {label}

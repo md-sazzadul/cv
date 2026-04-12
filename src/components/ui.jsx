@@ -7,7 +7,31 @@ export const SectionTitle = ({ children }) => (
   </div>
 );
 
-export const BulletList = ({ items }) => (
+function BoldText({ text, boldPhrases }) {
+  if (!boldPhrases || boldPhrases.length === 0) return <>{text}</>;
+
+  const escaped = boldPhrases.map((p) =>
+    p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+  );
+  const regex = new RegExp(`(${escaped.join("|")})`, "g");
+  const parts = text.split(regex);
+
+  return (
+    <>
+      {parts.map((part, i) =>
+        boldPhrases.includes(part) ? (
+          <strong key={i} className="font-semibold text-gray-800">
+            {part}
+          </strong>
+        ) : (
+          <span key={i}>{part}</span>
+        ),
+      )}
+    </>
+  );
+}
+
+export const BulletList = ({ items, boldPhrases }) => (
   <ul className="space-y-1.5">
     {items.map((item, i) => (
       <li
@@ -15,7 +39,7 @@ export const BulletList = ({ items }) => (
         className="flex gap-2.5 items-start text-[12.5px] text-gray-600 leading-relaxed"
       >
         <span className="mt-1.75 w-1.25 h-1.25 rounded-full bg-[#1a56a0] shrink-0" />
-        {item}
+        <BoldText text={item} boldPhrases={boldPhrases} />
       </li>
     ))}
   </ul>

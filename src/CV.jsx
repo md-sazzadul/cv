@@ -108,6 +108,8 @@ export default function CV() {
               <SidebarContactRow icon={<IconLinkedIn />}>
                 <a
                   href={cvData.linkedin.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-blue-200 transition-colors"
                 >
                   {cvData.linkedin.label}
@@ -116,6 +118,8 @@ export default function CV() {
               <SidebarContactRow icon={<IconGithub />}>
                 <a
                   href={cvData.github.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-blue-200 transition-colors"
                 >
                   {cvData.github.label}
@@ -152,8 +156,7 @@ export default function CV() {
       </div>
 
       <p className="text-center text-xs text-gray-400 mt-4">
-        Click the photo circle to upload your picture · Click "Export as PDF" to
-        download
+        Click "Export as PDF" to download
       </p>
     </div>
   );
