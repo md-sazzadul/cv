@@ -3,15 +3,9 @@ import { BulletList, SectionTitle } from "./ui";
 
 /* ── helpers ── */
 
-/**
- * Wraps specified phrases in <strong> within a text string.
- * @param {string} text
- * @param {string[]} boldPhrases
- */
 function BoldText({ text, boldPhrases }) {
   if (!boldPhrases || boldPhrases.length === 0) return <>{text}</>;
 
-  // Build a regex that matches any of the phrases
   const escaped = boldPhrases.map((p) =>
     p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
   );
@@ -154,6 +148,21 @@ export const Experience = ({ items }) => (
 );
 
 /* ── Projects ── */
+
+const PROJECT_BOLD = [
+  "production-grade dashboard",
+  "server-state management using TanStack Query (caching, retries, stale data handling)",
+  "advanced data pipelines (filter, sort, search, pagination)",
+  "interactive charts and dynamic tables",
+  "authentication flow with protected routes and JWT handling",
+  "accessibility, UX polish, and scalable architecture",
+  "full-featured task management system",
+  "real-time task filtering, priority management, and search highlighting",
+  "global state management using Zustand with persistence",
+  "feature-based architecture for maintainability",
+  "authentication and protected routing system",
+];
+
 export const Projects = ({ items }) => (
   <div className="mb-7">
     <SectionTitle>Projects</SectionTitle>
@@ -180,7 +189,7 @@ export const Projects = ({ items }) => (
               />
             </div>
           </div>
-          <BulletList items={proj.bullets} />
+          <BulletList items={proj.bullets} boldPhrases={PROJECT_BOLD} />
         </div>
       ))}
     </div>
