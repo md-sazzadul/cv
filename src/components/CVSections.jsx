@@ -1,22 +1,18 @@
 import { IconExternalLink, IconGithub } from "../icons";
-import { BulletList, SectionTitle } from "./ui";
 
 /* ── helpers ── */
-
 function BoldText({ text, boldPhrases }) {
   if (!boldPhrases || boldPhrases.length === 0) return <>{text}</>;
-
   const escaped = boldPhrases.map((p) =>
     p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
   );
   const regex = new RegExp(`(${escaped.join("|")})`, "g");
   const parts = text.split(regex);
-
   return (
     <>
       {parts.map((part, i) =>
         boldPhrases.includes(part) ? (
-          <strong key={i} className="font-semibold text-gray-800">
+          <strong key={i} style={{ fontWeight: 600, color: "#1f2937" }}>
             {part}
           </strong>
         ) : (
@@ -27,8 +23,46 @@ function BoldText({ text, boldPhrases }) {
   );
 }
 
-/* ── Summary ── */
+const SectionTitle = ({ children }) => (
+  <div
+    style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}
+  >
+    <h2
+      style={{
+        fontSize: 9,
+        fontWeight: 700,
+        letterSpacing: "1.5px",
+        textTransform: "uppercase",
+        color: "#1a56a0",
+        whiteSpace: "nowrap",
+      }}
+    >
+      {children}
+    </h2>
+    <div style={{ height: 1.5, flex: 1, background: "#1a56a0" }} />
+  </div>
+);
 
+const BulletList = ({ items, boldPhrases }) => (
+  <ul style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+    {items.map((item, i) => (
+      <li key={i} style={{ display: "flex", gap: 6, alignItems: "flex-start" }}>
+        <svg
+          viewBox="0 0 6 6"
+          style={{ width: 5, height: 5, flexShrink: 0, marginTop: 4 }}
+          fill="#1a56a0"
+        >
+          <circle cx="3" cy="3" r="3" />
+        </svg>
+        <span style={{ fontSize: 10.5, color: "#4b5563", lineHeight: 1.5 }}>
+          <BoldText text={item} boldPhrases={boldPhrases} />
+        </span>
+      </li>
+    ))}
+  </ul>
+);
+
+/* ── Summary ── */
 const SUMMARY_BOLD = [
   "React, TypeScript, and modern frontend architecture.",
   "component-driven development, state management, and data-heavy UI systems,",
@@ -37,11 +71,14 @@ const SUMMARY_BOLD = [
 ];
 
 export const Summary = ({ items }) => (
-  <div className="mb-7">
+  <div style={{ marginBottom: 14 }}>
     <SectionTitle>Professional Summary</SectionTitle>
-    <div className="space-y-2">
+    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
       {items.map((p, i) => (
-        <p key={i} className="text-[12.5px] text-gray-600 leading-relaxed">
+        <p
+          key={i}
+          style={{ fontSize: 10.5, color: "#4b5563", lineHeight: 1.55 }}
+        >
           <BoldText text={p} boldPhrases={SUMMARY_BOLD} />
         </p>
       ))}
@@ -49,21 +86,37 @@ export const Summary = ({ items }) => (
   </div>
 );
 
-/* ── Skills — dual-mode ── */
+/* ── Skills ── */
 export const Skills = ({ groups, sidebar = false }) => {
   if (sidebar) {
     return (
-      <div className="space-y-3.5">
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {groups.map((group) => (
           <div key={group.label}>
-            <p className="text-[9.5px] font-semibold uppercase tracking-wider text-blue-300 mb-1.5">
+            <p
+              style={{
+                fontSize: 8,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: "0.8px",
+                color: "#93c5fd",
+                marginBottom: 4,
+              }}
+            >
               {group.label}
             </p>
-            <div className="flex flex-wrap gap-1">
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
               {group.items.map((item) => (
                 <span
                   key={item}
-                  className="text-[10px] px-2 py-0.5 rounded bg-white/10 text-white/85 border border-white/15"
+                  style={{
+                    fontSize: 8.5,
+                    padding: "1px 6px",
+                    borderRadius: 3,
+                    background: "rgba(255,255,255,0.1)",
+                    color: "rgba(255,255,255,0.85)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                  }}
                 >
                   {item}
                 </span>
@@ -74,39 +127,10 @@ export const Skills = ({ groups, sidebar = false }) => {
       </div>
     );
   }
-
-  return (
-    <div className="mt-7">
-      <SectionTitle>Technical Skills</SectionTitle>
-      <div className="space-y-2.5">
-        {groups.map((group) => (
-          <div key={group.label} className="flex items-start gap-3">
-            <span className="text-[12px] font-semibold text-gray-700 w-29.5 shrink-0 pt-0.75">
-              {group.label}
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {group.items.map((item) => (
-                <span
-                  key={item}
-                  className={`text-[11.5px] px-2.5 py-0.75 rounded-full border ${
-                    group.label === "Concepts"
-                      ? "bg-gray-50 border-gray-300 text-gray-600"
-                      : "bg-blue-50 border-blue-200 text-blue-800"
-                  }`}
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return null;
 };
 
 /* ── Experience ── */
-
 const EXPERIENCE_BOLD = [
   "scalable frontend modules",
   "interactive geospatial visualizations",
@@ -118,24 +142,71 @@ const EXPERIENCE_BOLD = [
 ];
 
 export const Experience = ({ items }) => (
-  <div className="mb-7">
+  <div style={{ marginBottom: 14 }}>
     <SectionTitle>Professional Experience</SectionTitle>
-    <div className="space-y-5">
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       {items.map((exp, i) => (
-        <div key={i} className="flex gap-4">
-          <div className="flex flex-col items-center pt-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#1a56a0] shrink-0" />
-            <div className="w-[1.5px] bg-gray-200 flex-1 mt-1" />
+        <div key={i} style={{ display: "flex", gap: 10 }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              paddingTop: 4,
+            }}
+          >
+            <div
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                background: "#1a56a0",
+                flexShrink: 0,
+              }}
+            />
+            <div
+              style={{
+                width: 1.5,
+                background: "#e5e7eb",
+                flex: 1,
+                marginTop: 3,
+              }}
+            />
           </div>
-          <div className="flex-1 pb-1">
-            <p className="text-[13.5px] font-semibold text-gray-800 mb-0.5">
+          <div style={{ flex: 1, paddingBottom: 4 }}>
+            <p
+              style={{
+                fontSize: 11.5,
+                fontWeight: 600,
+                color: "#1f2937",
+                marginBottom: 2,
+              }}
+            >
               {exp.role}
             </p>
-            <div className="flex items-center justify-between flex-wrap gap-1 mb-2.5">
-              <span className="text-[12px] text-[#1a56a0]">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: 4,
+                marginBottom: 6,
+              }}
+            >
+              <span style={{ fontSize: 10, color: "#1a56a0" }}>
                 {exp.company} — {exp.location}
               </span>
-              <span className="text-[11px] text-gray-400 bg-gray-50 border border-gray-200 px-3 py-0.5 rounded-full">
+              <span
+                style={{
+                  fontSize: 9.5,
+                  color: "#9ca3af",
+                  background: "#f9fafb",
+                  border: "1px solid #e5e7eb",
+                  padding: "1px 8px",
+                  borderRadius: 999,
+                }}
+              >
                 {exp.date}
               </span>
             </div>
@@ -148,7 +219,6 @@ export const Experience = ({ items }) => (
 );
 
 /* ── Projects ── */
-
 const PROJECT_BOLD = [
   "production-grade dashboard",
   "server-state management using TanStack Query (caching, retries, stale data handling)",
@@ -164,19 +234,33 @@ const PROJECT_BOLD = [
 ];
 
 export const Projects = ({ items }) => (
-  <div className="mb-7">
+  <div style={{ marginBottom: 14 }}>
     <SectionTitle>Projects</SectionTitle>
-    <div className="space-y-4">
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
       {items.map((proj, i) => (
         <div
           key={i}
-          className="border border-gray-200 rounded-xl p-4 bg-gray-50/50"
+          style={{
+            border: "1px solid #e5e7eb",
+            borderRadius: 8,
+            padding: "10px 12px",
+            background: "rgba(249,250,251,0.5)",
+          }}
         >
-          <div className="flex items-start justify-between gap-3 mb-2.5 flex-wrap">
-            <p className="text-[13px] font-semibold text-gray-800">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
+              gap: 8,
+              marginBottom: 6,
+              flexWrap: "wrap",
+            }}
+          >
+            <p style={{ fontSize: 11, fontWeight: 600, color: "#1f2937" }}>
               {proj.name}
             </p>
-            <div className="flex gap-2">
+            <div style={{ display: "flex", gap: 6 }}>
               <ProjectLink
                 href={proj.github}
                 icon={<IconGithub />}
@@ -201,60 +285,92 @@ const ProjectLink = ({ href, icon, label }) => (
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className="flex items-center gap-1.5 text-[11px] text-blue-700 border border-blue-200 bg-blue-50 px-2.5 py-1 rounded-full hover:bg-blue-100 transition-colors"
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: 4,
+      fontSize: 9.5,
+      color: "#1d4ed8",
+      border: "1px solid #bfdbfe",
+      background: "#eff6ff",
+      padding: "2px 8px",
+      borderRadius: 999,
+      textDecoration: "none",
+    }}
   >
     {icon} {label}
   </a>
 );
 
-/* ── Education — dual-mode ── */
+/* ── Education ── */
 export const Education = ({ data, sidebar = false }) => {
   if (sidebar) {
     return (
       <div>
-        <p className="text-[12px] font-semibold text-white/90 mb-0.5">
+        <p
+          style={{
+            fontSize: 10.5,
+            fontWeight: 600,
+            color: "rgba(255,255,255,0.9)",
+            marginBottom: 2,
+          }}
+        >
           {data.degree}
         </p>
-        <p className="text-[11px] text-blue-200">{data.school}</p>
-        <p className="text-[10.5px] text-white/50">{data.location}</p>
+        <p style={{ fontSize: 9.5, color: "#93c5fd" }}>{data.school}</p>
+        <p style={{ fontSize: 9, color: "rgba(255,255,255,0.5)" }}>
+          {data.location}
+        </p>
       </div>
     );
   }
-
-  return (
-    <div>
-      <SectionTitle>Education</SectionTitle>
-      <div className="flex gap-3">
-        <div className="mt-1.5 w-2.5 h-2.5 rounded-full bg-[#1a56a0] shrink-0" />
-        <div>
-          <p className="text-[13.5px] font-semibold text-gray-800 mb-0.5">
-            {data.degree}
-          </p>
-          <p className="text-[12.5px] text-[#1a56a0]">{data.school}</p>
-          <p className="text-[12px] text-gray-400">{data.location}</p>
-        </div>
-      </div>
-    </div>
-  );
+  return null;
 };
 
-/* ── Languages — dual-mode ── */
+/* ── Languages ── */
 export const Languages = ({ items, sidebar = false }) => {
   if (sidebar) {
     return (
-      <div className="space-y-3">
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {items.map((lang) => (
           <div key={lang.name}>
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-[12px] font-medium text-white/90">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 3,
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 10.5,
+                  fontWeight: 500,
+                  color: "rgba(255,255,255,0.9)",
+                }}
+              >
                 {lang.name}
               </span>
-              <span className="text-[10px] text-white/50">{lang.level}</span>
+              <span style={{ fontSize: 8.5, color: "rgba(255,255,255,0.5)" }}>
+                {lang.level}
+              </span>
             </div>
-            <div className="h-1 w-full bg-white/15 rounded-full overflow-hidden">
+            <div
+              style={{
+                height: 4,
+                width: "100%",
+                background: "rgba(255,255,255,0.15)",
+                borderRadius: 999,
+                overflow: "hidden",
+              }}
+            >
               <div
-                className="h-full bg-blue-300 rounded-full"
-                style={{ width: `${lang.pct}%` }}
+                style={{
+                  height: "100%",
+                  width: `${lang.pct}%`,
+                  background: "#93c5fd",
+                  borderRadius: 999,
+                }}
               />
             </div>
           </div>
@@ -262,28 +378,5 @@ export const Languages = ({ items, sidebar = false }) => {
       </div>
     );
   }
-
-  return (
-    <div>
-      <SectionTitle>Languages</SectionTitle>
-      <div className="space-y-2.5">
-        {items.map((lang) => (
-          <div key={lang.name}>
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-[13px] font-medium text-gray-700">
-                {lang.name}
-              </span>
-              <span className="text-[11.5px] text-gray-400">{lang.level}</span>
-            </div>
-            <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-[#1a56a0] rounded-full"
-                style={{ width: `${lang.pct}%` }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return null;
 };
